@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_dev_sale_pricelist,import.sale.pricelist.all,model_import_sale_pricelist,,1,1,1,1
+access_import_vendor_pricelist_all,import.vendor.pricelist.all,model_import_vendor_pricelist,,1,1,1,1
+access_import_product_pricelist,import.product.pricelist.all,model_import_product_pricelist,,1,1,1,1
