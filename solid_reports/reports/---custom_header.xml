@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+	<template id="custom_layout_header">
+		<div class="header">
+			<div class="container">
+				<div class="row">
+					<div class="col-6">
+						<span style="font-size:20px;">
+							<b>
+								TRADEX 
+							</b>
+						</span>
+						<div style="font-size: 10px;">
+							<b>ENGINEERING INDUSTRIES L.L.C </b> <br/>
+							P.O Box 91540,Abu Dhabi, UAE <br/>
+							Tel : +971 2559 6790
+							<br/>
+							Fax : +971 2559 6790 <br/>
+							E-mail : trade@tradex.ae <br/>
+							Web : www.tradex.com
+						</div>
+					</div>
+
+					<div class="col-6">
+						<div class="float-right">
+							<span style="font-size:20px;">
+								<b>
+									TRADEXxxx 
+								</b>
+							</span>
+							<div style="font-size: 10px;">
+								<b>ENGINEERING INDUSTRIES L.L.C </b> <br/>
+								P.O Box 91540,Abu Dhabi, UAE <br/>
+								Tel : +971 2559 6790
+								<br/>
+								Fax : +971 2559 6790 <br/>
+								E-mail : trade@tradex.ae <br/>
+								Web : www.tradex.com
+							</div>	
+						</div>
+					</div>
+					
+				</div>
+
+			</div>
+		</div>
+	</template>
+
+</odoo>

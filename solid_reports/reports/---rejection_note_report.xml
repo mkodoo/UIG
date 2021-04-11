@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+
+	<report 
+		id="rejection_note_report"
+		model="stock.picking"
+		string="Rejection Note"
+		report_type="qweb-pdf"
+		name="sales_reports.rejection_note_template"/>
+
+	<template id="rejection_note_template">
+		<t t-call="web.html_container">
+			<t t-call="web.external_layout">
+				<t t-foreach="docs" t-as="doc">
+
+					<h3 class="text-center">Rejection Note</h3>
+					<br/>
+					<div class="row">
+						<div class="col-4">
+							<div t-field="doc.partner_id"
+           				    	t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
+						</div>
+					</div>		
+					<br/>
+					<table class="table table-bordered">
+						<tr>
+							<td> <b> Date :</b> <t t-esc="doc.date_done"/> </td>
+							<td> <b> Batch No. : </b> <t t-esc="doc.name"/> </td>
+						</tr>
+						<tr>
+							<td> <b> Supplier : </b> <t t-esc="doc.partner_id.name"/> </td>
+							<td> <b> Reference No. : </b> <t t-esc="doc.partner_id.ref"/> </td>
+						</tr>
+						<tr>
+							<td> <b> Origin: </b> </td>
+						</tr>
+					</table>
+
+					<br/><br/>
+					<b>SUBJECT : ___________________________</b>
+
+					<br/><br/>
+					<br/><br/>
+					<b>PROOF</b>
+
+					<br/><br/>
+					<br/><br/>
+					<b>COMMENTS</b>
+					<table class="table table-bordered">
+						<tr>
+							<td></td>
+						</tr>
+						<tr>
+							<td></td>
+						</tr>
+					</table>
+					<br/><br/>
+					<br/><br/>
+					<span>
+						<b>CHECKED BY : ________________________</b>
+					</span>
+					<span class="float-right">
+						<b>APPROVED BY : ________________________</b>
+					</span>
+			
+
+				</t>
+			</t>
+		</t>
+
+	</template>
+
+</odoo>

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+
+	<report 
+		id="good_return_note_report"
+		model="stock.picking"
+		string="Goods Return Note"
+		report_type="qweb-pdf"
+		name="solid_reports.good_return_note_template"/>
+
+	<template id="good_return_note_template">
+		<t t-call="web.html_container">
+			<t t-call="web.external_layout">
+				<t t-foreach="docs" t-as="doc">
+					<u>
+						<h3 class="text-center">GOODS RETURN NOTE</h3>
+					</u>
+					<br/><br/>
+
+					<div class="row">
+						<div class="col-8">
+							<b>From</b>
+							<div t-field="doc.partner_id"
+           				    	t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
+           				    <br/><br/>
+           				    <!-- <b>Delivery To</b>
+							<div t-field="doc.partner_id"
+           				    	t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/> -->
+						</div>
+						<div class="col-4">
+							<b># </b> <t t-esc="doc.name"/><br/>
+							<b>Date </b> <t t-esc="doc.scheduled_date"/> <br/>					
+						</div>
+					</div>
+					<br/>
+					<table class="table table-bordered">
+						<thead>
+							<th style="padding: 2px;">#</th>
+							<th style="padding: 2px;">Item</th>
+							<th style="padding: 2px;">Description</th>
+							<th style="padding: 2px;">Qty</th>
+						</thead>
+						<tbody>
+							<t t-set="count" t-value="1"/>
+							<t t-foreach="doc.move_ids_without_package" t-as="line">
+								<tr>
+									<td style="padding: 2px;">
+										<t t-esc="count"/>
+										<t t-set="count" t-value="count + 1"/>
+									</td>
+									<td style="padding: 2px;">
+										<t t-esc="line.product_id.name"/>
+									</td>
+									<td style="padding: 2px;">
+										<t t-esc="line.product_id.description_sale or  line.product_id.name"/>
+									</td>
+									<td style="padding: 2px;">
+										<t t-esc="line.product_uom_qty"/>
+									</td>
+								</tr>
+							</t>
+							
+						</tbody>
+					</table>
+
+					<br/>
+
+					Items in Total <t t-esc="count - 1"/><br/><br/>
+					Looking forward for your business
+
+					<br/>
+					<br/>
+					<b>Authorized Signature _____________________________________</b>
+
+
+
+
+				</t>
+			</t>
+		</t>
+	</template>
+
+</odoo>

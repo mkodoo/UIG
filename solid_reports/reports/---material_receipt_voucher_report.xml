@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+
+	<report 
+		id="material_receipt_voucher_report"
+		model="stock.picking"
+		string="Material Receipt Voucher"
+		report_type="qweb-pdf"
+		name="sales_reports.material_receipt_voucher_template"/>
+
+	<template id="material_receipt_voucher_template">
+		<t t-call="web.html_container">
+			<t t-call="web.external_layout">
+				<t t-foreach="docs" t-as="doc">
+					<u>
+						<h3 class="text-center">MATERIAL RECEIPT VOUCHER</h3>
+					</u>
+					<br/><br/>
+
+					<div class="row">
+						<div class="col-8">
+							<b>Our Ref. </b>
+						</div>
+						<div class="col-4">
+							<b>No.</b>
+						</div>					
+					</div>
+
+
+					<div class="row">
+						<div class="col-8">
+							<b>Received From M/s</b> <t t-esc="doc.partner_id.name"/> <br/>
+							<b>Supplier D/O. No </b>
+							
+						</div>
+						<div class="col-4">
+							<b>Date</b> <t t-esc="doc.scheduled_date"/><br/>				
+						</div>
+					</div>
+					<br/>
+					<table class="table table-bordered">
+						<thead>
+							<th style="padding: 2px;">No.</th>
+							<th style="padding: 2px;">W/H</th>
+							<th style="padding: 2px;">CODE</th>
+							<th style="padding: 2px;">MATERIAL DESCRIPTION</th>
+							<th style="padding: 2px;">QTY.</th>
+							<th style="padding: 2px;">REMARKS</th>
+						</thead>
+						<tbody>
+							<t t-set="count" t-value="1"/>
+							<t t-foreach="doc.move_ids_without_package" t-as="line">
+								<tr>
+									<td style="padding: 2px;">
+										<t t-esc="count"/>
+										<t t-set="count" t-value="count + 1"/>
+									</td>
+									<td style="padding: 2px;">
+
+									</td>
+									<td style="padding: 2px;">
+										<t t-esc="line.product_id.default_code"/>
+									</td>
+									<td style="padding: 2px;">
+										<t t-esc="line.product_id.name"/>
+									</td>
+									<td style="padding: 2px;">
+										<t t-esc="line.product_uom_qty"/>
+									</td>
+									<td style="padding: 2px;">
+									</td>
+								</tr>
+							</t>
+						</tbody>
+					</table>
+					<br/>
+					<div class="row">
+						<div class="col-8">
+							<b>Authorised Signature <br/></b>
+							......................................................................
+						</div>
+						<div class="col-4">
+							<b>Received above goods by <br/></b>
+							......................................................................
+							<br/>
+							Date: 
+						</div>					
+					</div>
+
+
+
+				</t>
+			</t>
+		</t>
+	</template>
+
+</odoo>

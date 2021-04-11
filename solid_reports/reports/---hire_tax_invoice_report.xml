@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+
+	<report 
+		id="hire_tax_invoice_report"
+		model="account.move"
+		string="Hire Tax Invoice"
+		report_type="qweb-pdf"
+		name="sales_reports.hire_tax_invoice_template"/>
+
+	<template id="hire_tax_invoice_template">
+		<t t-call="web.html_container">
+			<t t-call="web.external_layout">
+				<t t-foreach="docs" t-as="doc">
+					
+					<h3 class="text-center">HIRE TAX INVOICE</h3>
+					
+					<br/><br/>
+
+					<div class="row">
+						<div class="col-8">
+							<b>Customer Code:</b>
+							<div t-field="doc.partner_id"
+           				    	t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
+           				    	<b>TRN:</b>
+						</div>
+						<div class="col-4">
+							<b>Site Details</b><br/>
+							<b>PROJECT</b><br/>
+							<b>P.O. OPEN</b><br/>
+							<b>DISCOUNT</b><br/>
+						</div>
+					</div>
+					<br/>
+					<table class="table table-bordered">
+						<thead>
+							<tr>
+								<td colspan="7">
+									<div class="row">
+										<div class="col-4">
+											<b>Order No : </b> <t t-esc="doc.invoice_origin"/>
+										</div>
+										<div class="col-4">
+											<b>Invoice No : </b> <t t-esc="doc.name"/>
+										</div>
+										<div class="col-4">
+											<b>Invoice Date : </b> <t t-esc="doc.invoice_date"/>
+										</div>
+
+									</div>
+									<div class="row">
+										<div class="col-4">
+											<b>Last Inv No : </b>
+										</div>
+										<div class="col-4">
+											<b>Contract No : </b> 
+										</div>
+										<div class="col-4">
+											<b>Page No : </b> 
+										</div>
+
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<th style="padding: 2px;">Code No</th>
+								<th style="padding: 2px;">Description</th>
+								<th style="padding: 2px;">QTY</th>
+								<th style="padding: 2px;">Charge from/to</th>
+								<th style="padding: 2px;">No of Days </th>
+								<th style="padding: 2px;"> Rate/Week <t t-esc="doc.currency_id.name"/> </th>
+								<th style="padding: 2px;">Total AMT <t t-esc="doc.currency_id.name"/></th>
+							</tr>
+						</thead>
+						<tbody>
+							<t t-set="count" t-value="1"/>
+							<t t-set="total_discount" t-value="0"/>
+
+							<t t-foreach="doc.invoice_line_ids" t-as="line">
+								<tr>
+									<t t-set="count" t-value="count + 1"/>
+									<t t-set="total_discount" t-value="total_discount + line.discount "/>
+									
+									<td style="padding: 2px;">
+										<t t-esc="line.product_id.default_code"/>
+									</td>
+									<td style="padding: 2px;">
+										<t t-esc="line.name"/>
+									</td>
+									<td style="padding: 2px;">
+										<t t-esc="'{0:,.2f}'.format(float(line.quantity))"/>
+									</td>
+									
+									<td></td>
+									<td></td>
+									
+									<td style="padding: 2px;">
+										<t t-esc="'{0:,.2f}'.format(float(line.price_unit))"/>
+									</td>
+									<td style="padding: 2px;">
+										<t t-esc="'{0:,.2f}'.format(float(line.price_subtotal))"/>
+									</td>
+								</tr>
+							</t>
+							<tr style="border:1px;">
+								<td colspan="6"  style="border-top:1px; !important">
+									<b>HIRE CONTINUES</b>
+									<br/><br/>
+									
+									<span class="float-left">
+										<b> DO Nos : </b>   <br/>
+										<b>MRV Nos : </b>  <br/>
+										<b>Sales Code </b>  <br/>
+										<b>Payment Terms </b>
+									</span>
+
+
+									<span class="float-right">
+										TOTAL AMOUNT <br/>
+										DISCOUNT <br/>
+										TOTAL EXCL VAT <br/>
+										VAT - 5% <br/>
+										<b>INVOICE TOTAL</b> <br/>
+									</span>
+								</td>
+								<td>
+									<br/>
+									<br/>
+									<span >
+										<t t-esc="'{0:,.2f}'.format(float(doc.amount_total))"/>
+										<br/>
+										<t t-esc="'{0:,.2f}'.format(float(total_discount / (count - 1) ))"/> <br/>
+										<t t-esc="'{0:,.2f}'.format(float(doc.amount_untaxed))"/> <br/>
+										<b><t t-esc="'{0:,.2f}'.format(float(doc.amount_tax))"/> </b><br/>
+										<b><t t-esc="'{0:,.2f}'.format(float(doc.amount_total))"/> </b><br/>
+									</span>
+								</td>
+								
+							</tr>
+						
+							
+						</tbody>
+					</table>
+				</t>
+			</t>
+		</t>
+	</template>
+
+</odoo>

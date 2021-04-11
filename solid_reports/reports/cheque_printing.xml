@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+
+	<report 
+		id="cheque_print_report"
+		model="account.payment"
+		string="Print Cheque"
+		report_type="qweb-pdf"
+		name="solid_reports.checque_print_template"
+
+	/>
+	<template id="checque_print_template">
+		<t t-call="web.html_container">
+            <t t-call="web.external_layout">
+            <t t-foreach="docs" t-as="doc">
+
+
+                
+                    <u>                 
+                        <h3 class="text-center"><b> PAYMENT VOUCHER</b></h3>
+                    </u>
+                   
+                    <br/><br/>
+                    <div class="row">
+                        <div class="col-8">
+                            <b>No.</b> <t t-esc="doc.name"/>
+                            <br/>
+                        </div>
+                        <div class="col-4">
+                            <b>Date</b> <t t-esc="doc.payment_date"/> <br/>
+                            <b>Dhs. </b> 
+                            <t t-esc="'{0:,.2f}'.format(float(doc.amount))"/>
+                            <br/>
+                        </div>
+                    </div>
+                    <br/><br/>
+                    <b> Received From Mrs/Mr.  </b> <t t-esc="doc.partner_id.name"/>
+                    <br/><br/>
+                    <b> The Sum of Dirhams  </b> <t t-esc="doc.amount_in_words"/>
+                    <br/><br/>
+                    <b> Being amount received  </b> <t t-esc="'{0:,.2f}'.format(float(doc.amount))"/>
+                    <br/><br/>
+                    <div class="row">
+                        <div class="col-8">
+                            <b>Cheque No.</b> 
+                            <br/><br/>
+                            <b>Dated </b> <t t-esc="doc.payment_date"/>
+                            <br/><br/>
+                        </div>
+                        <div class="col-4">
+                            <b>Bank</b> <t t-esc="doc.journal_id.name"/> <br/><br/>
+                            <b>Received</b> 
+                            <br/>
+                        </div>
+                    </div>
+
+
+
+
+                    <br/><br/><br/>
+                    <br/><br/><br/>
+                    <br/><br/><br/>
+                    <br/><br/><br/>
+                    <br/><br/><br/>
+                    
+                    <div>
+
+                        <div style="left: 84%; top: 86%;">
+                            <span style="float:right; margin-right:10px;">  <b><t t-esc="doc.payment_date"/></b> </span>
+                        </div>
+
+                        <div style=" left: 10%; top: 84%; float:left; width:480px; margin-left:15px;" dir="ltr">
+                            <br/><br/>
+                            <span style="float:left;">
+                                <b><t style="float:left;  margin-left:100px;" t-esc="doc.partner_id.name"/>  </b> </span>
+                            <br/><br/>
+                           <span style="float:left;"> <b> <t style="float:left;" t-esc="doc.amount_in_words"/>. </b>  </span>
+                        </div>
+
+                        <div style=" left: 84%; top: 84%; margin-right:10px;" class="float-right" dir="ltr">
+                            <br/><br/>
+                            <br/><br/>
+                            <br/><br/>
+                            <br/><br/>
+                            <b> <t t-esc="'{0:,.2f}'.format(float(doc.amount))"/> </b>
+                        </div>
+
+                    </div>
+
+            	</t>
+       		</t>
+        </t>
+		
+	</template>
+
+</odoo>

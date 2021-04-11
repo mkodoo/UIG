@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+
+	<report 
+		id="quotation_report"
+		model="sale.order"
+		string="Quotation"
+		report_type="qweb-pdf"
+		name="solid_reports.quotation_template"/>
+
+	<template id="quotation_template">
+		<t t-call="web.html_container">
+			<t t-call="web.external_layout">
+				<t t-foreach="docs" t-as="doc">
+					<h3 class="text-center">QUOTATION</h3>
+					<br/>
+					<div class="row">
+						<div class="col-8">
+							<b>Quot To </b>
+							<div t-field="doc.partner_id" t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
+						</div>
+						<div class="col-4">
+							<b>#</b> <t t-esc="doc.name"/> <br/>
+							<b>Date </b> <t t-esc="doc.date_order"/> <br/>
+						</div>
+					</div>
+					
+					<br/>
+					<br/>
+					
+					<br/>
+			
+
+					<table class="table table-bordered">
+						<thead style="border:1px;">
+							<th style="padding: 3px;">#</th>
+							<th style="padding: 3px;">Item</th>
+							<th style="padding: 3px;">Description</th>
+							<th style="padding: 3px;">Qty</th>
+							<th style="padding: 3px;">Rate</th>
+							<th style="padding: 3px;">Tax%</th>
+							<th style="padding: 3px;">Amount</th>
+						</thead>
+						<t t-set="count" t-value="1"/>
+						<t t-set="total_discount" t-value="0"/>
+						<t t-set="tax_name" t-value="1"/>
+							
+
+						<t t-foreach="doc.order_line" t-as="line">
+							<tr style="border: none;">
+								<td style="padding: 2px;">
+									<t t-esc="count"/>
+									<t t-set="count" t-value="count + 1"/>
+								</td>
+								<td style="padding: 3px;">
+									<t t-esc="line.product_id.name"/>
+								</td>
+								<td style="padding: 3px;">
+									<t t-esc="line.name"/>
+								</td>
+								<td style="padding: 3px;">
+									<t t-esc="line.product_uom_qty" />
+								</td>						
+								<td style="padding: 3px;">
+									<t t-esc="'{0:,.2f}'.format(float(line.price_unit))"/>
+								</td>
+								<td>
+									<t t-foreach="line.tax_id" t-as="tax">
+										<t t-esc="tax.amount"/><br/>
+										<t t-set="tax_name" t-value="tax.name"/>
+									</t>
+								</td>
+								<td style="padding: 3px;">
+									<t t-esc="'{0:,.2f}'.format(float(line.price_subtotal))"/>
+								</td>
+							</tr>
+						</t>
+					</table>
+
+
+
+					<div class="row">
+						<div class="col-6">
+							Items In Total <t t-esc="count - 1"/><br/><br/>
+							Looking forward for your business
+						</div>
+						<div class="col-6">
+							<table class="table table-bordered" style="border: none;">
+								<tr>
+									<td style="border-left: 0px; border-right: 0px; padding:2px;">Sub Total</td>
+									<td style="border-left: 0px; border-right: 0px; padding:2px;">
+										
+										<span t-esc="doc.currency_id.symbol" />  <span t-esc="'{0:,.2f}'.format(float(doc.amount_untaxed))" />
+									</td>
+								</tr>
+								<tr>
+									<td style="border-left: 0px; border-right: 0px; padding:2px;">VAT (5%)</td>
+									<td style="border-left: 0px; border-right: 0px; padding:2px;">
+										<span t-esc="doc.currency_id.symbol" />  <span t-esc="'{0:,.2f}'.format(float(doc.amount_tax))" />
+									</td>
+								</tr>
+								<tr>
+									<td style="border-left: 0px; border-right: 0px; padding:2px;"> <b>Total</b> </td>
+									<td style="border-left: 0px; border-right: 0px; padding:2px;"> 
+										<b>
+											<span t-esc="doc.currency_id.symbol" />  <span t-esc="'{0:,.2f}'.format(float(doc.amount_total))" />
+										</b> 
+									</td>
+								</tr>
+								
+								<tr> <td style="background-color:white;"></td> </tr>
+							</table>
+						</div>
+					</div>
+
+
+
+					<br/>
+					<br/>
+				<br/>
+				<br/>
+				<br/>
+
+					<b>SOLID's Bank Details:</b><br/>
+					<div class="row">
+						<div class="col-2">
+							Bank Name <br/>
+							Account Name <br/>
+							AED Account No.<br/>
+						</div>
+						<div class="col-5">
+							<b>NATIONAL BANK OF FUJAIRAH</b><br/>
+							<b>SOLID SOLUTION TECHNOLOGY LLC</b><br/>
+							<b>012001402078</b><br/>
+						</div>
+					</div>
+
+				<!-- </div> -->
+				<br/>
+				<br/>
+				<br/>
+				<br/>
+				<div class="page">
+					
+					<div class="row">
+						<div class="col-2">
+							IBAN AED <br/><br/>
+							Swift Code            
+						</div>
+						<div class="col-5">
+							<b> AE150380000012001402078</b><br/><br/>
+							<b> NBFUAEAFDXB </b>
+						</div>
+					</div>
+					<br/><br/>
+					<br/>
+				<br/>
+				<br/>
+				<br/><br/>
+				<br/>
+				<br/>
+				<br/>
+					<b>Terms and Conditions</b><br/>
+					Payment Terms: <t t-esc="doc.payment_term_id.name"/><br/>
+					Delivery Location: Dubai Showroom<br/>
+					General Terms: <br/>
+					Product Prices and Availability: Products are invoiced in UAE Dirham (AED) or in US Dollars (USD) based on your selection ($1.00 = AED 3.68). SOLID may revise the price of any item from time to time depending on market conditions. Prices are subject to change without notice and once changed, they cannot be claimed against any order which has been already processed or delivered. SOLID will not issue refunds in the event that a price drop occurs after a customer has made a purchase. SOLID carry large stock of products to ensure prompt delivery; however, it does not guarantee that any item will be in-stock or that any item will continue to be carried in stock. Selection of inventory may change and is subject to change without notice.Order Acceptance: Receiving an order confirmation does not indicate that your order has been accepted, nor does it indicate that the product has been sold to you. SOLID reserves the right at any time after receiving your order to accept or decline it for any reason. SOLID reserves the right at any time after receiving your order to request additional verifications or information before accepting any order.Receiving your order: After receiving your product, please inspect it carefully as to its contents and condition. Prior to opening or breaking the factory seal, please ensure that the model number on the packing or carton matches your order. Opened products or with a broken factory seal or switched, will not qualify for return.Payment: Payment will be made as agreed in writing by SOLID or in absence of such agreement, within 30 days of the invoice date without further notice from SOLID. Payment timing is of the essence. SOLID may suspend deliveries or Service until full payment for that order. If payment is late, SOLID may charge interest at the rate of 4% monthly on the late amount ,and the costs of recovery shall be payable by you.Delivery: Delivery times advised to you are estimates only and SOLID will not be liable for any loss, damage or delay suffered or incurred by you or your end-users arising from late or non-delivery of the Products.Cancellation: You may not cancel or reschedule an order once accepted by SOLID unless approved by SOLID on a case to case basis. Requests for cancellation or rescheduling might be subject to liquidated damages charge of the purchase price of the order.Products Warranty: All items sold by SOLID are warranted solely by the Brand/Manufacturer. All items needing repair or maintenance should be handled directly by the manufacturer by contacting their service center for warranty claim. SOLID is not liable if the manufacturer fails to perform warranty services. SOLID reserves the right to inspect and apply its own RMA policy prior to replacement or refund approval. Other than what is provided by the brand/manufacturer, SOLID clearly disown any warranties or ownership in respect of quality, suitability, accuracy, reliability, completeness, timeliness, performance, safety, merchantability, fitness for a particular purpose, or legality of the products listed or displayed or transacted.Export Control: You acknowledge that Product may include technology and Software which is subject to US and EU export control laws and laws of the country where it is delivered or used: you must abide by all these laws. Product may not be sold, leased or transferred to restricted / embargoed end users or countries or for a user involved in weapons of mass destruction or genocide without the prior consent of the US or competent EU government. You understand and acknowledge that US and EU restrictions vary regularly and depending on Product, therefore you must refer to the current US and EU regulations<br/><br/>
+
+					<b>Authorized Signature _____________________________________</b>
+
+
+				</div>
+
+
+
+				</t>
+			</t>
+		</t>
+
+	</template>
+
+</odoo>

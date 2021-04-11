@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+
+	<report 
+		id="purchase_order_report"
+		model="purchase.order"
+		string="Purchase Order"
+		report_type="qweb-pdf"
+		name="sales_reports.purchase_order_template"/>
+
+	<template id="purchase_order_template">
+		<t t-call="web.html_container">
+			<t t-call="web.external_layout">
+				<t t-foreach="docs" t-as="doc">
+
+					<h3 class="text-center">Purchase Order</h3>
+					
+					<div class="row">
+						<div class="col-8">
+							<b>Supplier Code : </b> <t t-esc="doc.partner_id.ref"/><br/>
+							<b>Supplier Name : </b> <t t-esc="doc.partner_id.name"/> <br/>
+							<b>Supplier Address : </b><span t-field="doc.partner_id"
+           				    	t-options='{"widget": "contact", "fields": ["address", "phone"], "no_marker": True, "phone_icons": True}'/>
+           				    <b>TRN:</b>
+						</div>
+						<div class="col-4">
+							<b>Contact Person </b> <br/>
+							<b>Reference </b> <br/>
+							<b>Revision </b> _____  <b>Date </b> <br/>
+						</div>					
+					</div>
+					<br/>
+					<div class="row">
+						<div class="col-4">
+							<b>Account</b><br/>
+							__________________
+						</div>
+						<div class="col-4">
+							<b>Date</b><br/>
+							<t t-esc="doc.date_order"/>
+						</div>
+						<div class="col-4">
+							<b>Order No</b><br/>
+							<t t-esc="doc.name"/>
+						</div>
+					</div>
+
+					<br/>	
+
+					<b>
+						Please Supply us the following and debit our account: <br/>
+					</b>		
+
+					<table class="table table-hover" style="border: none;">
+						<thead style="border:1px;">
+							<th style="border-right: 0px; padding:2px;">S. No</th>
+							<th style="border-right: 0px;border-left: 0px; padding:2px;">Item Code</th>
+							<th style="border-right: 0px;border-left: 0px; padding:2px;">Item Description</th>
+							<th style="border-right: 0px;border-left: 0px; padding:2px;">Material Grade</th>
+							<th style="border-right: 0px;border-left: 0px; padding:2px;">Weight / Length</th>
+							<th style="border-right: 0px;border-left: 0px; padding:2px;">Quantity</th>
+							<th style="border-right: 0px;border-left: 0px; padding:2px;">Unit</th>
+							<th style="border-right: 0px;border-left: 0px; padding:2px;">Rate</th>
+							<th style="border-left: 0px; padding:2px;">Total Amount (<t t-esc="doc.currency_id.name"/>)</th>
+						</thead>
+						<t t-set="count" t-value="1"/>
+						<t t-set="total_discount" t-value="0"/>
+
+						<t t-foreach="doc.order_line" t-as="line">
+							<tr style="border: none;">
+								<td class="text-center" style="border: none; padding:2px;">
+									<t t-esc="count"/>
+									<t t-set="count" t-value="count + 1"/>
+								</td>
+								<td style="border: none; padding:2px;">
+									<t t-esc="line.product_id.default_code"/>
+								</td>
+								<td style="border: none; padding:2px;">
+									<t t-esc="line.product_id.name"/>
+								</td>
+								<td style="border: none;">
+								</td>
+								<td style="border: none;">
+								</td>
+
+								<td style="border: none; padding:2px;" class="float-right">
+									<t t-esc="line.product_uom_qty"/>
+								</td>						
+								<td style="border: none; padding:2px;">
+									<t t-esc="line.product_uom.name"/>
+								</td>						
+								<td style="border: none; padding:2px;">
+									<t t-esc="'{0:,.2f}'.format(float(line.price_unit))"/>
+								</td>
+								<td style="border: none; padding:2px;">
+									<t t-esc="'{0:,.2f}'.format(float(line.price_subtotal))"/>
+								</td>
+							</tr>
+						</t>
+					</table>
+					
+					<div class="row">
+						<div class="col-8"> </div>
+						<div class="col-4">
+							
+							<div class="row">
+								<div class="col-6">
+									<b>Sub Total</b>
+								</div>
+								<div class="col-6">
+									<t t-esc="'{0:,.2f}'.format(float(doc.amount_untaxed))"/>
+								</div>
+							</div>
+							
+							<div class="row">
+								<div class="col-6">
+									<b>Discount </b>
+								</div>
+								<div class="col-6">
+									
+								</div>
+							</div>
+							
+							<div class="row">
+								<div class="col-6">
+									<b>VAT 5%</b>
+								</div>
+								<div class="col-6">
+									<t t-esc="'{0:,.2f}'.format(float(doc.amount_tax))"/>
+								</div>
+							</div>
+							
+							<div class="row">
+								<div class="col-6">
+									<b>Total Value</b> 
+								</div>
+								<div class="col-6">
+									<t t-esc="'{0:,.2f}'.format(float(doc.amount_total))"/>
+								</div>
+							</div>
+						
+						</div>
+					</div>
+
+					<br/>
+						<b>Payment Terms : <t t-esc="doc.payment_term_id.name"/> <br/>
+
+						Delivery Terms:<br/>
+						AL DOCUMENTS SHOULD BE IN THE NAME OF:<br/>
+						TRADEX LLC <br/>
+						PO BOX 8505, DUBAI - UAE
+						<br/><br/>
+						the following document/certificate must be furnished at the time of the delivery <br/>
+						
+						<input type="checkbox"> Mill Test Certificate(s)</input> <br/>
+						<input type="checkbox"> Certificate of Conformity</input> <br/>
+						<input type="checkbox"> Other</input> 
+
+						<br/>
+						Remarks:<br/>
+						<table class="table table-bordered">
+							<tr><td></td></tr>
+							<tr><td></td></tr>
+							<tr><td></td></tr>
+						</table>
+
+						
+						<div class="row">
+							<div class="col-4">
+								Prepared By<br/>_____________________________
+							</div>
+							<div class="col-4">
+								Accounts Department<br/>
+								_____________________________
+							</div>
+							<div class="col-4">
+								Approved By<br/>
+								_____________________________
+							</div>
+						</div>
+					</b>
+
+				</t>
+			</t>
+		</t>
+
+	</template>
+
+</odoo>

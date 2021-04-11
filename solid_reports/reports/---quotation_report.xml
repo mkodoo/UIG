@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+
+	<report 
+		id="quotation_report"
+		model="sale.order"
+		string="Quotation"
+		report_type="qweb-pdf"
+		name="sales_reports.quotation_template"/>
+
+	<template id="quotation_template">
+		<t t-call="web.html_container">
+			<t t-call="web.external_layout">
+				<t t-foreach="docs" t-as="doc">
+
+					<h3 class="text-center">QUOTATION</h3>
+					<br/>
+					
+
+					<table class="table table-hover">
+						<tr>
+							<td>
+								<b>Customer Code:</b>
+								<div t-field="doc.partner_id"
+           				    	t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
+           				    	<b>TRN:</b>
+							</td>
+							<td>
+								<div class="row">
+									<div class="col-4">
+										Date
+									</div>
+									<div class="col-6">
+										<t t-esc="doc.date_order"/>
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="col-4">
+										Quote No
+									</div>
+									<div class="col-6">
+										<t t-esc="doc.name"/>
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="col-4">
+										Validity
+									</div>
+									<div class="col-6">
+										One Week
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="col-4">
+										Sales Codes
+									</div>
+									<div class="col-6">
+										013
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="col-4">
+										RFQ
+									</div>
+									<div class="col-6">
+										
+									</div>
+								</div>
+
+							</td>
+						</tr>
+					</table>		
+
+					<br/>
+					<p> To: </p>
+					<br/>
+			
+
+					<table class="table table-hover" style="border: none;">
+						<thead style="border:1px;">
+							<th style="border-right: 0px; padding: 2px;">S. No</th>
+							<th style="border-right: 0px;border-left: 0px; padding: 2px;">Item Description</th>
+							<th style="border-right: 0px;border-left: 0px; padding: 2px;">Quantity</th>
+							<th style="border-right: 0px;border-left: 0px; padding: 2px;">Unit</th>
+							<th style="border-right: 0px;border-left: 0px; padding: 2px;">Price</th>
+							<th style="border-right: 0px;border-left: 0px; padding: 2px;">Disc %</th>
+							<th style="border-left: 0px; padding: 2px;">Total (<t t-esc="doc.currency_id.name"/>)</th>
+						</thead>
+						<t t-set="count" t-value="1"/>
+						<t t-set="total_discount" t-value="0"/>
+
+						<t t-foreach="doc.order_line" t-as="line">
+							<tr style="border: none;">
+								<td style="border: none; padding: 2px;">
+									<t t-esc="count"/>
+									<t t-set="count" t-value="count + 1"/>
+								</td>
+								<td style="border: none; padding: 2px;">
+									<t t-esc="line.product_id.name"/>
+								</td>
+								<td style="border: none; padding: 2px;" class="float-right">
+									<t t-esc="line.product_uom_qty" />
+								</td>						
+								<td style="border: none; padding: 2px;">
+									<t t-esc="line.product_uom.name"/>
+								</td>						
+								<td style="border: none; padding: 2px;">
+									<t t-esc="'{0:,.2f}'.format(float(line.price_unit))"/>
+								</td>
+								<td style="border: none; padding: 2px;">
+									<t t-esc="line.discount"/>
+									<t t-set="total_discount" t-value="total_discount + line.discount "/>
+								</td>
+								<td style="border: none; padding: 2px;" class="float-right">
+									<t t-esc="'{0:,.2f}'.format(float(line.price_subtotal))"/>
+								</td>
+							</tr>
+						</t>
+					</table>
+					<br/>
+					NOTE:
+					<br/>
+					<br/>
+					<br/>
+					<br/>
+					
+					
+					<hr/>
+					<div class="row">
+						<div class="col-8"> </div>
+						<div class="col-4">
+							
+							<div class="row">
+								<div class="col-6">
+									Total (Excl)
+								</div>
+								<div class="col-6">
+									<t t-esc="'{0:,.2f}'.format(float(doc.amount_untaxed))"/>
+								</div>
+							</div>
+							
+							<div class="row">
+								<div class="col-6">
+									Discount %
+								</div>
+								<div class="col-6">
+									<t t-esc="'{0:,.2f}'.format(float(total_discount / (count - 1) ))"/>
+								</div>
+							</div>
+							
+							<div class="row">
+								<div class="col-6">
+									VAT 5%
+								</div>
+								<div class="col-6">
+									<t t-esc="'{0:,.2f}'.format(float(doc.amount_tax))"/>
+								</div>
+							</div>
+							
+							<div class="row">
+								<div class="col-6">
+									<b>Total</b> (Incl)
+								</div>
+								<div class="col-6">
+									<t t-esc="'{0:,.2f}'.format(float(doc.amount_total))"/>
+								</div>
+							</div>
+						
+						</div>
+					</div>
+
+					<br/>
+
+					Delivery :  <br/>
+					Payment Terms : <br/>
+
+					<br/><br/>
+
+					Kind Regards
+
+					<br/>
+					<br/>
+					<t t-esc="doc.user_id.partner_id.name"/>
+					<br/>
+					<t t-esc="doc.user_id.partner_id.phone"/>
+
+				</t>
+			</t>
+		</t>
+
+	</template>
+
+</odoo>

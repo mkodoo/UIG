@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+
+	<report 
+		id="purchase_order_report"
+		model="purchase.order"
+		string="Purchase Order"
+		report_type="qweb-pdf"
+		name="solid_reports.purchase_order_template"/>
+
+	<template id="purchase_order_template">
+		<t t-call="web.html_container">
+			<t t-call="web.external_layout">
+				<t t-foreach="docs" t-as="doc">
+
+					<h3 class="text-center">PURCHASE ORDER</h3>
+					
+					<div class="row">
+						<div class="col-8">
+							
+							<b>Supplier</b><div t-field="doc.partner_id"
+           				    	t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
+						</div>
+						<div class="col-4">
+							<b># </b> <t t-esc="doc.name"/> <br/>
+							<b>Date </b> <t t-esc="doc.date_order"/> <br/>
+						</div>					
+					</div>
+					<br/>
+
+					<table class="table table-bordered" >
+						<thead>
+							<th style="padding: 3px;">#</th>
+							<th style="padding: 3px;">Item</th>
+							<th style="padding: 3px;">Item Description</th>
+							<th style="padding: 3px;">Qty</th>
+							<th style="padding: 3px;">Rate</th>
+							<th style="padding: 3px;">Amount</th>
+						</thead>
+						<t t-set="count" t-value="1"/>
+						<t t-set="total_discount" t-value="0"/>
+
+						<t t-foreach="doc.order_line" t-as="line">
+							<tr style="border: none;">
+								<td style="padding: 3px;" class="text-center">
+									<t t-esc="count"/>
+									<t t-set="count" t-value="count + 1"/>
+								</td>
+								<td style="padding: 3px;">
+									<t t-esc="line.product_id.name"/>
+								</td>
+								<td style="padding: 3px;">
+									<t t-esc="line.name"/>
+								</td>
+								<td style="padding: 3px;">
+									<t t-esc="line.product_uom_qty"/>
+								</td>						
+								<td style="padding: 3px;">
+									<t t-esc="'{0:,.2f}'.format(float(line.price_unit))"/>
+								</td>
+								<td style="padding: 3px;">
+									<t t-esc="'{0:,.2f}'.format(float(line.price_subtotal))"/>
+								</td>
+							</tr>
+						</t>
+					</table>
+					
+					<div class="row">
+						<div class="col-8"> </div>
+						<div class="col-4">
+							
+							<div class="row">
+								<div class="col-6">
+									<b>Sub Total</b>
+								</div>
+								<div class="col-6">
+									<t t-esc="'{0:,.2f}'.format(float(doc.amount_untaxed))"/>
+								</div>
+							</div>
+							
+							
+							<div class="row">
+								<div class="col-6">
+									<b>VAT 5%</b>
+								</div>
+								<div class="col-6">
+									<t t-esc="'{0:,.2f}'.format(float(doc.amount_tax))"/>
+								</div>
+							</div>
+							
+							<div class="row">
+								<div class="col-6">
+									<b>Total</b> 
+								</div>
+								<div class="col-6">
+									<t t-esc="'{0:,.2f}'.format(float(doc.amount_total))"/>
+								</div>
+							</div>
+						
+						</div>
+					</div>
+
+
+				</t>
+			</t>
+		</t>
+
+	</template>
+
+</odoo>

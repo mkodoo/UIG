@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+
+	<report 
+		id="tax_invoice_report"
+		model="account.move"
+		string="Tax Invoice"
+		report_type="qweb-pdf"
+		name="sales_reports.tax_invoice_template"/>
+
+	<template id="tax_invoice_template">
+		<t t-call="web.html_container">
+			<t t-call="web.external_layout">
+				<t t-foreach="docs" t-as="doc">
+					
+					<h3 class="text-center">TAX INVOICE</h3>
+					
+					<br/><br/>
+
+					<div class="row">
+						<div class="col-8">
+							<b>Customer Code: </b>
+							<div t-field="doc.partner_id"
+           				    	t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
+           				    <b>Customer TRN:</b><br/>
+           				    <b>YOUR ORDER NO.</b> <t t-esc="doc.invoice_origin"/><br/>
+           				    <b>DATED </b> <t t-esc="doc.invoice_date"/><br/>
+           				    <b>PAYMENTS TERMS </b> <t t-esc="doc.invoice_payment_term_id.name"/> <br/>
+           				    <b>SALES CODES </b> 
+						</div>
+						<div class="col-4">
+							<b>INVOICE NO.</b> <t t-esc="doc.name"/> <br/>
+							<b>INVOICE DATE </b> <t t-esc="doc.invoice_date"/><br/>
+							<b>DELIVERIED TO </b> D/C<br/>
+							<b>D.O. NOS: </b> 888711155 <br/>
+							<b>M.R.V NO.</b><br/>
+						</div>
+					</div>
+					<br/>
+					<table class="table table-bordered">
+						<thead>
+							<th style="padding: 2px;">S. No.</th>
+							<th style="padding: 2px;">Code</th>
+							<th style="padding: 2px;">Description</th>
+							<th style="padding: 2px;">Quantity</th>
+							<th style="padding: 2px;">unit</th>
+							<th style="padding: 2px;">Unit Rate In <t t-esc="doc.currency_id.name"/></th>
+							<th style="padding: 2px;">Vat 5%</th>
+							<th style="padding: 2px;">Amount in <t t-esc="doc.currency_id.name"/></th>
+						</thead>
+						<tbody>
+							<t t-set="count" t-value="1"/>
+							<t t-set="total_discount" t-value="0"/>
+
+							<t t-foreach="doc.invoice_line_ids" t-as="line">
+								<tr>
+									<td style="padding: 2px;">
+										<t t-esc="count"/>
+										<t t-set="count" t-value="count + 1"/>
+
+										<t t-set="total_discount" t-value="total_discount + line.discount "/>
+									</td>
+									<td style="padding: 2px;">
+										<t t-esc="line.product_id.default_code"/>
+									</td>
+									<td style="padding: 2px;">
+										<t t-esc="line.product_id.name"/>
+									</td>
+									<td style="padding: 2px;">
+										<t t-esc="'{0:,.2f}'.format(float(line.quantity))"/>
+									</td>
+									<td style="padding: 2px;">
+										<t t-esc="line.product_uom_id.name"/>
+									</td>
+									<td style="padding: 2px;">
+										<t t-esc="'{0:,.2f}'.format(float(line.price_unit))"/>
+									</td>
+									<td style="padding: 2px;">
+										
+									</td>
+									<td style="padding: 2px;">
+										<t t-esc="'{0:,.2f}'.format(float(line.price_subtotal))"/>
+									</td>
+								</tr>
+							</t>
+							<tr style="border:1px;">
+								<td colspan="7"  style="border-top:1px; !important">
+									Amount in Words: 
+									<t t-esc="doc.amount_in_words"/>
+
+									<span class="float-right">
+										NET TOTAL <br/>
+										DISCOUNT <br/>
+										VAT <br/>
+										<b>GRAND TOTAL</b> <br/>
+									</span>
+								</td>
+								<td>
+									
+									<span class="float-right">
+										<t t-esc="'{0:,.2f}'.format(float(doc.amount_untaxed))"/>
+										<br/>
+										<t t-esc="'{0:,.2f}'.format(float(total_discount / (count - 1) ))"/> <br/>
+										<t t-esc="'{0:,.2f}'.format(float(doc.amount_tax))"/> <br/>
+										<b><t t-esc="'{0:,.2f}'.format(float(doc.amount_total))"/> </b><br/>
+									</span>
+								</td>
+								
+							</tr>
+							<tr>
+								<td colspan="8">
+									NOTE:- DISCREPANCIES IF ANY SHOULD BE NOTIFIED TO US IN WRITING WITHIN 15 DAYS FROM RECEIPT OF THIS INVOICE. NO CLAIM WHATSOEVER ON THIS INVOICE SHALL BE ENTERTAINED BY US THEREAFTER
+								</td>
+							</tr>
+							
+						</tbody>
+					</table>
+					<br/><br/>
+					E and OE <br/>
+					PRINT DATE <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d-%m-%Y')"/> <br/>
+					PRINTED BY 
+
+				</t>
+			</t>
+		</t>
+	</template>
+
+</odoo>

@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+
+	<report 
+		id="tax_credit_note_report"
+		model="account.move"
+		string="Tax Credit Note"
+		report_type="qweb-pdf"
+		name="sales_reports.tax_credit_note_template"/>
+
+	<template id="tax_credit_note_template">
+		<t t-call="web.html_container">
+			<t t-call="web.external_layout">
+				<t t-foreach="docs" t-as="doc">
+					
+					<h3 class="text-center">TAX CREDIT NOTE</h3>
+					
+					<br/><br/>
+
+					<div class="row">
+						<div class="col-8">
+							<b>Customer Code</b>
+							<div t-field="doc.partner_id"
+           				    	t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
+           				    <b>TRN:</b><br/>
+           				    	<br/>
+           				   Please Note that we have credited your account as under
+						</div>
+						<div class="col-4">
+							<b>Credit Note NO.</b> <t t-esc="doc.name"/> <br/>
+							<b>DATE </b> <t t-esc="doc.invoice_date"/><br/>
+						</div>
+					</div>
+
+					<table class="table">
+						<tr>
+							<td>
+								
+								<div class="row">
+									<div class="col-8">
+										<b>Ref.</b> 8885 <br/>
+										<br/>
+										<b>Against Invoice No.</b> 
+
+									</div>
+									<div class="col-4">
+										<b>Our D.O NO.</b> DUNAI LAND 2 <br/>
+										<b>Our M.R.V No.</b> 2225854<br/>
+										<b>Sales Codes</b>   004      <b>Costs Code</b>
+									</div>
+								</div>
+
+							</td>
+						</tr>
+					</table>
+
+					<br/>
+
+
+					<table class="table table-bordered">
+						<thead>
+							
+							<th style="padding: 2px;">Code</th>
+							<th style="padding: 2px;">Description</th>
+							<th style="padding: 2px;">Quantity</th>
+							<th style="padding: 2px;">unit</th>
+							<th style="padding: 2px;">Unit Rate In <t t-esc="doc.currency_id.name"/></th>
+							<th style="padding: 2px;">Vat 5%</th>
+							<th style="padding: 2px;">Amount in <t t-esc="doc.currency_id.name"/></th>
+						</thead>
+						<tbody>
+							<t t-set="count" t-value="1"/>
+							<t t-set="total_discount" t-value="0"/>
+
+							<t t-foreach="doc.invoice_line_ids" t-as="line">
+								<tr>
+									<!-- <td> -->
+									<!-- <t t-esc="count"/> -->
+									<t t-set="count" t-value="count + 1"/>
+
+									<t t-set="total_discount" t-value="total_discount + line.discount "/>
+									<!-- </td> -->
+									<td style="padding: 2px;">
+										<t t-esc="line.product_id.default_code"/>
+									</td>
+									<td style="padding: 2px;">
+										<t t-esc="line.product_id.name"/>
+									</td>
+									<td style="padding: 2px;">
+										<t t-esc="'{0:,.2f}'.format(float(line.quantity))"/>
+									</td>
+									<td style="padding: 2px;">
+										<t t-esc="line.product_uom_id.name"/>
+									</td>
+									<td style="padding: 2px;">
+										<t t-esc="'{0:,.2f}'.format(float(line.price_unit))"/>
+									</td>
+									<td style="padding: 2px;">
+										
+									</td>
+									<td style="padding: 2px;">
+										<t t-esc="'{0:,.2f}'.format(float(line.price_subtotal))"/>
+									</td>
+								</tr>
+							</t>
+							<tr style="border:1px;">
+								<td colspan="6"  style="border-top:1px; !important">
+									
+									Remarks:
+
+									<span class="float-right">
+										AMOUNT <br/>
+										VAT <br/>
+									</span>
+								</td>
+								<td>
+									<span class="float-right">
+										<t t-esc="'{0:,.2f}'.format(float(doc.amount_untaxed))"/>
+										<br/>
+										
+										<t t-esc="'{0:,.2f}'.format(float(doc.amount_tax))"/> <br/>
+									</span>
+								</td>
+							</tr>
+							
+							<tr style="border:1px;">
+								<td colspan="6"  style="border-top:1px; !important">
+									<b>Amount in Words: </b><t t-esc="doc.amount_in_words"/>
+
+								</td>
+								<td>
+									<span class="float-right">
+										<b><t  t-esc="'{0:,.2f}'.format(float(doc.amount_total))"/> </b>
+										<br/>
+										
+									</span>
+								</td>
+							</tr>
+							
+
+						</tbody>
+					</table>
+					<br/><br/>
+					<span class="float-right">
+						<b>Prepared By:</b>
+					</span>
+					<b>Approved by:</b> <br/><br/>
+					PRINT DATE <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d-%m-%Y')"/> <br/>
+					PRINTED TIME <span t-esc="context_timestamp(datetime.datetime.now()).strftime(' %H:%M')"/>
+					
+
+
+				</t>
+			</t>
+		</t>
+	</template>
+
+</odoo>

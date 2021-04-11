@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+	<report 
+		id="order_form_report"
+		model="sale.order"
+		string="Order Form"
+		report_type="qweb-pdf"
+		name="sales_reports.order_form_template"/>
+
+	<template id="order_form_template">
+		<t t-call="web.html_container">
+			<t t-call="web.external_layout">
+				<t t-foreach="docs" t-as="doc">
+					<h3 class="text-center">ORDER FORM</h3>
+					<br/>
+					<table class="table">
+						<tr>
+							<td>
+								Customer Code:
+								<div t-field="doc.partner_id"
+           				    	t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
+           				    	TRN:
+							</td>
+							<td>
+								<div class="row">
+									<div class="col-4">
+										Date
+									</div>
+									<div class="col-6">
+										<t t-esc="doc.date_order"/>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-4">
+										Order No.
+									</div>
+									<div class="col-6">
+										<t t-esc="doc.name"/>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-4">
+										LPO No.
+									</div>
+									<div class="col-6">
+										
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-4">
+										LPO Date
+									</div>
+									<div class="col-6">
+										<t t-esc="doc.date_order"/>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-4">
+										Quote No
+									</div>
+									<div class="col-6">
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-4">
+										Delivery Note
+									</div>
+									<div class="col-6">
+										
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-4">
+										Sales Codes
+									</div>
+									<div class="col-6">
+										
+									</div>
+								</div>
+							</td>
+						</tr>
+					</table>
+					<table class="table">
+						<tr>
+							<td>
+								<b>Delivery Address:</b><br/>
+								
+								<br/><br/><br/>
+							</td>
+							<td>
+								<table style="border: none;">
+									<tr>
+										<td style="border: none;">
+											<input type="checkbox">  JAFZA YARD </input>
+										</td>
+										<td style="border: none;">
+											<input type="checkbox">  ABU DHABI FACTORY </input>
+										</td>
+									</tr>
+									<tr>
+										<td style="border: none;">
+											<input type="checkbox">  SHARJAH FACTORY </input>
+										</td>
+										<td style="border: none;">
+											<input type="checkbox">  AL QOUZ YARD </input>
+										</td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+					</table>		
+					<table class="table table-hover" style="border: none;">
+						<thead style="border:1px;">
+							<th style="border-right: 0px; padding:2px;">Code</th>
+							<th style="border-right: 0px;border-left: 0px; padding:2px;">Code</th>
+							<th style="border-right: 0px;border-left: 0px; padding:2px;">Item Description</th>
+							<th style="border-right: 0px;border-left: 0px; padding:2px;">Quantity</th>
+							<th style="border-left: 0px; padding:2px;">Unit</th>
+						</thead>
+						<t t-set="count" t-value="1"/>
+						<t t-set="total_discount" t-value="0"/>
+						<t t-foreach="doc.order_line" t-as="line">
+							<tr style="border: none;">
+								<td style="border: none; padding:2px;">
+									<t t-esc="count"/>
+									<t t-set="count" t-value="count + 1"/>
+								</td>
+								<td style="border: none; padding:2px;">
+									<t t-esc="line.product_id.default_code"/>
+								</td>						
+								<td style="border: none; padding:2px;">
+									<t t-esc="line.product_id.name"/>
+								</td>
+								<td style="border: none; padding:2px;">
+									<t t-esc="line.product_uom_qty"/>
+								</td>						
+								<td style="border: none; padding:2px;">
+									<t t-esc="line.product_uom.name"/>
+								</td>						
+							</tr>
+						</t>
+					</table>
+					<br/>
+					<br/>
+					<table class="table" style="border: none;">
+						<tr>
+							<td style="border: none; padding:2px;">
+								<span style="padding:10%;">Sales Dept </span>
+							</td>
+							<td style="border: none; padding:2px;">
+								<span style="padding:10%;">Hire Dept </span>
+							</td>
+						
+							<td style="border: none; padding:2px;">
+								<span style="padding:10%;">Accounts Dept </span>
+							</td>
+							<td style="border: none; padding:2px;">
+								<span style="padding:10%;">Approved </span>
+							</td>
+						</tr>
+					</table>
+				</t>
+			</t>
+		</t>
+	</template>
+</odoo>

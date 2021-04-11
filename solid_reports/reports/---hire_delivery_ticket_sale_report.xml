@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+
+	<report 
+		id="hire_delivery_ticket_sale_report"
+		model="sale.order"
+		string="Hire Delivery Ticket"
+		report_type="qweb-pdf"
+		name="sales_reports.hire_delivery_sale_template"/>
+
+	<template id="hire_delivery_sale_template">
+		<t t-call="web.html_container">
+			<t t-call="web.external_layout">
+				<t t-foreach="docs" t-as="doc">
+					<u>
+						<h3 class="text-center">HIRE DELIVERY TICKET</h3>
+					</u>
+					<br/><br/>
+
+					<div class="row">
+						<div class="col-8">
+							<!-- <b>Invoice No.</b> -->
+						</div>
+						<div class="col-4">
+							<b>HDT No.</b> <br/>
+							<b>DATE:</b> <t t-esc="doc.date_order"/> 
+						</div>					
+					</div>
+
+
+					<div class="row">
+						<div class="col-8">
+							<b>Customer Details</b><br/>
+							<b>Cust. Code</b><br/>
+							<div t-field="doc.partner_id"
+           				    	t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
+           				    	<b>TRN</b><br/>
+						</div>
+						<div class="col-4">
+							<b>Delivery Details</b><br/>
+							<b>Order No. </b> <t t-esc="doc.name"/><br/>
+							<b>LPO No. </b><br/>
+							<b>LPO DATE </b><br/>
+							<b>Site No. </b><br/>
+							<b>Location</b> <br/>
+							<b>Tel. No.</b><br/>
+							<b>Contact</b><br/>
+							<b>Job No.</b><br/>
+						</div>
+					</div>
+					<br/>
+					<table class="table table-bordered">
+						<thead>
+							<th style="padding: 2px;">No.</th>
+							<th style="padding: 2px;">CODE</th>
+							<th style="padding: 2px;">MATERIAL DESCRIPTION</th>
+							<th style="padding: 2px;">QTY.</th>
+							<th style="padding: 2px;">REMARKS</th>
+						</thead>
+						<tbody>
+
+							<t t-set="count" t-value="1"/>
+							<t t-foreach="doc.order_line" t-as="line">
+								<t t-if="line.product_id.rent_ok">
+									<tr>
+										<td style="padding: 2px;">
+											<t t-esc="count"/>
+											<t t-set="count" t-value="count + 1"/>
+										</td>
+										<td style="padding: 2px;">
+											<t t-esc="line.product_id.default_code"/>
+										</td>
+										<td style="padding: 2px;">
+											<t t-esc="line.product_id.name"/>
+										</td>
+										<td style="padding: 2px;">
+											<t t-esc="line.product_uom_qty"/>
+										</td>
+										<td style="padding: 2px;">
+										</td>
+									</tr>
+								</t>
+							</t>
+							
+						</tbody>
+					</table>
+
+					<table class="table table-bordered " style="position: absolute; bottom: 20px;">
+						<tr>
+								<td colspan="5" style="padding: 2px;">
+									<b>
+										Note: All Material will be subject to our Standard Hire Terms and Conditions. A copy can be obtained from our office.
+									</b>
+								</td>
+							</tr>
+							<tr>
+								<td colspan="3" style="padding: 2px;">
+									<b>Transport By</b>
+								</td>
+								<td style="padding: 2px;">
+									<b>Material Received on behalf of Hires by:</b>
+								</td>
+								<td colspan="3" style="padding: 2px;">
+									<b>Delivery Given By</b>
+								</td>
+							</tr>
+
+							<tr>
+								<td colspan="3" style="padding: 2px;">
+									<b>Driver's Name</b>
+								</td>
+								<td style="padding: 2px;">
+									<b>Name</b>
+								</td>
+								<td colspan="3" style="padding: 2px;">
+									<b>Signiture</b>
+								</td>
+							</tr>
+							
+							<tr>
+								<td colspan="3" style="padding: 2px;">
+									<b>Truck Regn. No.</b>
+								</td>
+								<td style="padding: 2px;">
+									<b>Signiture and Date</b>
+								</td>
+								<td colspan="3" style="padding: 2px;">
+									<b>Date</b>
+								</td>
+							</tr>
+					</table>
+
+				</t>
+			</t>
+		</t>
+	</template>
+
+</odoo>
+ 
